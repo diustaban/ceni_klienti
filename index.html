@@ -501,7 +501,7 @@
 <div class="table-container">
   <table>
     <tr><th>Група</th><th>Коефициент</th><th>Платове</th></tr>
-    <tr><td>1</td><td>1.0</td><td>Yildiz</td></tr>
+    <tr><td>1</td><td>1</td><td>Yildiz</td></tr>
     <tr><td>2</td><td>1.2</td><td>Panama, Panama Pearl*, Yildiz Sedef, Line Harmony, Mat Linen</td></tr>
     <tr><td>3</td><td>1.4</td><td>Yildiz Blackout, Yildiz Blackout Sedef, Focus Blackout, Focus Sedef Blackout, Monaco Blackout, Lugano Blackout, Pes Screen, YS Screen, Glarus, Uster, Lancy</td></tr>
     <tr><td>4</td><td>1.5</td><td>Basel Blackout, KS Screen, CS Screen</td></tr>
@@ -876,7 +876,9 @@
           Та е с 5cm разлика повече в ширина спрямо размера на плата!<br>
           Щора "Ден и Нощ" Елеганс е възможно да опира на стъклото при пускане на плат!
 <div class="examples-gallery">      
-<div class="example-item"><img src="https://i.imgur.com/iadgQL6.jpg" alt="Роло щора – монтаж 1"></div>
+          <div class="example-item"><img src="https://i.imgur.com/RQYOwXx.jpg" alt="Ден и Нощ Елеганс 29mm – монтаж 1"></div>
+          <div class="example-item"><img src="https://i.imgur.com/jqRUpmK.jpg" alt="Ден и Нощ Елеганс 29mm – монтаж 2"></div>
+          <div class="example-item"><img src="https://i.imgur.com/rV5ymJ8.jpg" alt="Ден и Нощ Елеганс 29mm – монтаж 3"></div>
                   </div>  
 </div>
 </div>
@@ -2038,7 +2040,7 @@ ${itemsList}
       });
     }
     
-    let currentUser = null; // Клиентска версия – без логин
+
     let history = [];
     let miniHistory = [];
     let dnHistory = [];
@@ -2092,28 +2094,35 @@ ${itemsList}
       220: {50:22,60:25,70:28,80:30,90:33,100:36,110:39,120:43,130:45,140:48,150:50},
       230: {50:22,60:25,70:28,80:31,90:34,100:37,110:40,120:44,130:46,140:49,150:51}
     };
-    const miniFabricCoeff = { 
-      "Yildiz": 1.0,
-      "Panama": 1.2,
-      "Panama Pearl*": 1.2,
-      "Yildiz Sedef": 1.2,
-      "Line Harmony": 1.2,
-      "Mat Linen": 1.2,
-      "Yildiz Blackout": 1.4,
-      "Yildiz Blackout Sedef": 1.4,
-      "Focus Blackout": 1.4,
-      "Focus Sedef Blackout": 1.4,
-      "Monaco Blackout": 1.4,
-      "Lugano Blackout": 1.4,
-      "Pes Screen": 1.4,
-      "YS Screen": 1.4,
-      "Glarus": 1.4,
-      "Uster": 1.4,
-      "Lancy": 1.4,
-      "Basel Blackout": 1.5,
-      "KS Screen": 1.5,
-      "CS Screen": 1.5,
-      "Blackout Screen": 1.6
+    function normFabricKey(obj, fabric) {
+      if (!fabric) return null;
+      const k = String(fabric).trim();
+      if (obj[k] !== undefined) return k;
+      if (k.endsWith("*")) { const k2 = k.slice(0, -1); if (obj[k2] !== undefined) return k2; }
+      return null;
+    }
+    const miniFabricCoeff = {
+      "Yildiz": { white: 1, brown: 1 },
+      "Panama": { white: 1.2, brown: 1.2 },
+      "Panama Pearl*": { white: 1.2, brown: 1.2 },
+      "Yildiz Sedef": { white: 1.2, brown: 1.2 },
+      "Line Harmony": { white: 1.2, brown: 1.2 },
+      "Mat Linen": { white: 1.2, brown: 1.2 },
+      "Yildiz Blackout": { white: 1.4, brown: 1.4 },
+      "Yildiz Blackout Sedef": { white: 1.4, brown: 1.4 },
+      "Focus Blackout": { white: 1.4, brown: 1.4 },
+      "Focus Sedef Blackout": { white: 1.4, brown: 1.4 },
+      "Monaco Blackout": { white: 1.4, brown: 1.4 },
+      "Lugano Blackout": { white: 1.4, brown: 1.4 },
+      "Pes Screen": { white: 1.4, brown: 1.4 },
+      "YS Screen": { white: 1.4, brown: 1.4 },
+      "Glarus": { white: 1.4, brown: 1.4 },
+      "Uster": { white: 1.4, brown: 1.4 },
+      "Lancy": { white: 1.4, brown: 1.4 },
+      "Basel Blackout": { white: 1.5, brown: 1.5 },
+      "KS Screen": { white: 1.5, brown: 1.5 },
+      "CS Screen": { white: 1.5, brown: 1.5 },
+      "Blackout Screen": { white: 1.6, brown: 1.6 }
     };
         const dnPriceTable = {
       50: {50:19,60:22,70:24,80:26,90:28,100:29,110:31,120:33,130:35,140:37,150:39},
@@ -2397,8 +2406,19 @@ ${itemsList}
       basel_blackout: { price: 35.00, label: "BASEL BLACKOUT" },
       pes_screen: { price: 26.00, label: "PES SCREEN" },
       line_harmony: { price: 18.00, label: "LINE HARMONY" },
-      mat_linen: { price: 18.00, label: "MAT LINEN" }
+      mat_linen: { price: 18.00, label: "MAT LINEN" },
+      glarus: { price: 18.00, label: "GLARUS" },
+      lancy: { price: 18.00, label: "LANCY" },
+      uster_blackout: { price: 26.00, label: "USTER BLACKOUT" },
+      ks_screen: { price: 29.00, label: "KS SCREEN" },
+      cs_screen: { price: 29.00, label: "CS SCREEN" }
     };
+    function normRoletniSeriesKey(val) {
+      if (!val) return val;
+      var k = String(val).trim();
+      var map = { yildiz_m: "yildiz_ser", yildiz_color: "yildiz_ser", yildiz_sedef: "yildiz_sedef_ser", panama: "panama_ser", yildiz_blackout: "yildiz_blackout_ser", yildiz_blackout_sedef: "yildiz_blackout_sedef_ser", focus_blackout: "focus_blackout_ser", focus_sedef_blackout: "focus_sedef_blackout_ser", ys_screen: "ys_screen_blackout" };
+      return map[k] || k;
+    }
     const roletniExtras = {
       box_closed: { value: 4.56, type: "per_meter", label: "Затворена кутия (+4.56 €/л.м.)" },
       box_fabric: { value: 13.44, type: "per_meter", label: "Кутия с плат (+13.44 €/л.м.)" },
@@ -2477,7 +2497,7 @@ ${itemsList}
       clip_profile: { value: 3.00, label: "Цял профил + клипсове (+3.00 €/m²)" },
       tape_profile: { value: 3.00, label: "Цял профил + двойнозалепващо (+3.00 €/m²)" }
     };
-    // Цени за нормални потребители (2026)
+    // Цени за перде (2026)
         const perdeSeries = {
       dt: { price: 35.00, label: "DT" },
       nd: { price: 35.00, label: "ND" },
@@ -2488,16 +2508,7 @@ ${itemsList}
       smf: { price: 40.00, label: "SMF" }
     };
     
-    // Цени за потребител "dist" (2026)
-        const perdeSeriesDist = {
-      dt: { price: 35.00, label: "DT" },
-      nd: { price: 35.00, label: "ND" },
-      dj: { price: 35.00, label: "DJ" },
-      sm: { price: 35.00, label: "SM" },
-      br: { price: 45.00, label: "JP/Brilliant (цв.печат)" },
-      mc: { price: 40.00, label: "MC (тесни платове)" },
-      smf: { price: 40.00, label: "SMF" }
-    };
+        ;
     const perdeSeriesColors = {
       br: [
         { code: "BR-01", name: "", color: "#FDFDFD" },
@@ -2535,9 +2546,9 @@ ${itemsList}
       ]
     };
     
-    // Функция за получаване на правилните цени в зависимост от потребителя
+    // Цени за перде (клиентска версия)
     function getPerdeSeries() {
-      return currentUser === "distributor1" ? perdeSeriesDist : perdeSeries;
+      return perdeSeries;
     }
     
     // Функции за получаване на максималните размери от таблиците
@@ -3003,9 +3014,11 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = miniPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      let k = miniFabricCoeff[fabric];
-      if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
-      if (color === 'brown') k *= 1.05;
+      const fabricKeyMini = normFabricKey(miniFabricCoeff, fabric);
+      if (!fabricKeyMini) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const coeffsMini = miniFabricCoeff[fabricKeyMini];
+      const k = (coeffsMini && typeof coeffsMini === 'object') ? (coeffsMini[color] ?? coeffsMini.white) : coeffsMini;
+      if (k == null || typeof k !== 'number') { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат/цвят."; return; }
       const final = base * k;
       const platName = fabric;
       const controlLabel = control === "left" ? "Ляво" : "Дясно";
@@ -3060,8 +3073,9 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = dnPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      let k = dnFabricCoeff[fabric];
-      if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const fabricKeyDn = normFabricKey(dnFabricCoeff, fabric);
+      if (!fabricKeyDn) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      let k = dnFabricCoeff[fabricKeyDn];
       if (color === 'brown') k *= 1.05;
       const final = base * k;
       const platName = fabric;
@@ -3117,8 +3131,9 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = elegansPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      const coeffs = elegansCoeff[fabric];
-      if (!coeffs) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const fabricKeyE = normFabricKey(elegansCoeff, fabric);
+      if (!fabricKeyE) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const coeffs = elegansCoeff[fabricKeyE];
       const k = coeffs[color];
       if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден цвят за този плат."; return; }
       const final = base * k;
@@ -3175,8 +3190,9 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = dnElegansPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      const coeffs = dnElegansCoeff[fabric];
-      if (!coeffs) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const fabricKeyDnE = normFabricKey(dnElegansCoeff, fabric);
+      if (!fabricKeyDnE) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const coeffs = dnElegansCoeff[fabricKeyDnE];
       const k = coeffs[color];
       if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден цвят за този плат."; return; }
       const final = base * k;
@@ -3233,8 +3249,9 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = roloPlusPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      const coeffs = roloPlusCoeff[fabric];
-      if (!coeffs) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const fabricKeyRolo = normFabricKey(roloPlusCoeff, fabric);
+      if (!fabricKeyRolo) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const coeffs = roloPlusCoeff[fabricKeyRolo];
       const k = coeffs[color];
       if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден цвят за този плат."; return; }
       const final = base * k;
@@ -3291,8 +3308,9 @@ ${itemsList}
       const w = roundUpTo10(width), h = roundUpTo10(height);
       const base = dnnPlusPriceTable[h]?.[w];
       if (!base) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Грешка в таблицата."; return; }
-      const coeffs = dnnPlusCoeff[fabric];
-      if (!coeffs) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const fabricKeyDnn = normFabricKey(dnnPlusCoeff, fabric);
+      if (!fabricKeyDnn) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
+      const coeffs = dnnPlusCoeff[fabricKeyDnn];
       const k = coeffs[color];
       if (!k) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден цвят за този плат."; return; }
       const final = base * k;
@@ -3338,7 +3356,8 @@ ${itemsList}
     function calculateRoletni() {
       const widthIn = parseFloat(document.getElementById("roletni-width").value);
       const heightIn = parseFloat(document.getElementById("roletni-height").value);
-      const seriesKey = document.getElementById("roletni-series").value;
+      const seriesKeyRaw = document.getElementById("roletni-series").value;
+      const seriesKey = normRoletniSeriesKey(seriesKeyRaw);
       const control = document.getElementById("roletni-control").value;
       let extras = Array.from(document.querySelectorAll(".roletni-extra:checked")).map(c => c.value);
       let selectedJumbo = document.querySelector("input[name='roletni-jumbo']:checked");
@@ -3636,7 +3655,7 @@ ${itemsList}
       }
       
       // Изчисляване на цената на м² за заден плат (от roletniSeries, като на ролетни щори)
-      const backSeries = roletniSeries[backFabric];
+      const backSeries = roletniSeries[normRoletniSeriesKey(backFabric)];
       if (!backSeries) {
         showCalcError(res, "Невалиден заден плат.");
         return;
@@ -3762,8 +3781,11 @@ ${itemsList}
       const widthIn = parseFloat(document.getElementById("plise-width").value);
       const heightIn = parseFloat(document.getElementById("plise-height").value);
       const isDouble = document.getElementById("plise-double").checked;
-      const seriesKey = document.getElementById("plise-series").value;
-      const thinSeriesKey = isDouble ? document.getElementById("plise-thin-series").value : null;
+      const seriesKeyRaw = document.getElementById("plise-series").value;
+      const thinSeriesKeyRaw = isDouble ? document.getElementById("plise-thin-series").value : null;
+      function normPliseSeriesKey(v) { if (!v) return null; var k = String(v).toUpperCase().trim(); if (k === "HONEYCOMB") k = "HONEYCOM"; return k; }
+      const seriesKey = normPliseSeriesKey(seriesKeyRaw);
+      const thinSeriesKey = thinSeriesKeyRaw ? normPliseSeriesKey(thinSeriesKeyRaw) : null;
       const profileColor = document.getElementById("plise-profile-color").value;
       
       let extras = Array.from(document.querySelectorAll(".plise-extra:checked")).map(c => c.value);
@@ -4563,7 +4585,13 @@ ${itemsList}
         alert("Секцията не е намерена.");
         return;
       }
-      
+      const accordionContent = section.closest(".accordion-content");
+      if (accordionContent && !accordionContent.classList.contains("open")) {
+        accordionContent.classList.add("open");
+        await new Promise(r => setTimeout(r, 400));
+      }
+      section.scrollIntoView({ behavior: "instant", block: "start" });
+      await new Promise(r => setTimeout(r, 250));
       // Use desktop width for consistent rendering (1200px matches accordion max-width)
       const containerWidth = 1200;
       
