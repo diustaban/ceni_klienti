@@ -487,6 +487,10 @@
               <option value="left">Ляво</option>
               <option value="right">Дясно</option>
             </select>
+            <div class="calc-radio-group" style="display:flex;flex-wrap:wrap;gap:1rem;margin:0.75rem 0;">
+              <label style="display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;"><input type="radio" name="mini-cords" value="no" checked> Без корди</label>
+              <label style="display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;"><input type="radio" name="mini-cords" value="yes"> +корди (+3 €)</label>
+            </div>
             <button onclick="calculateMini()">Изчисли</button>
           </div>
           <div class="calc-result" id="mini-result">—</div>
@@ -587,6 +591,10 @@
               <option value="left">Ляво</option>
               <option value="right">Дясно</option>
             </select>
+            <div class="calc-radio-group" style="display:flex;flex-wrap:wrap;gap:1rem;margin:0.75rem 0;">
+              <label style="display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;"><input type="radio" name="dn-cords" value="no" checked> Без корди</label>
+              <label style="display:inline-flex;align-items:center;gap:0.4rem;cursor:pointer;"><input type="radio" name="dn-cords" value="yes"> +корди (+3 €)</label>
+            </div>
             <button onclick="calculateDN()">Изчисли</button>
           </div>
           <div class="calc-result" id="dn-result">—</div>
@@ -3021,9 +3029,12 @@ ${itemsList}
       const coeffsMini = miniFabricCoeff[fabricKeyMini];
       const k = (coeffsMini && typeof coeffsMini === 'object') ? (coeffsMini[color] ?? coeffsMini.white) : coeffsMini;
       if (k == null || typeof k !== 'number') { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат/цвят."; return; }
-      const final = base * k;
+      let final = base * k;
+      const miniCordsEl = document.querySelector('input[name="mini-cords"]:checked');
+      if (miniCordsEl && miniCordsEl.value === "yes") final += 3;
       const platName = fabric;
       const controlLabel = control === "left" ? "Ляво" : "Дясно";
+      const cordsLabel = (miniCordsEl && miniCordsEl.value === "yes") ? "+корди (+3 €)" : "Без корди";
       res.style.display = "block";
       res.style.background = "#eafaf1";
       res.style.color = "#1e8449";
@@ -3032,6 +3043,7 @@ ${itemsList}
         <div>Плат: <span class="highlight">${platName}</span> (×${k.toFixed(2)})</div>
         <div>Цвят: <span class="highlight">${getColorDisplay(color)}</span></div>
         <div>Управление: <span class="highlight">${controlLabel}</span></div>
+        <div>Корди: <span class="highlight">${cordsLabel}</span></div>
         <div style="margin-top:12px; font-size:1.4em;">Цена: <strong>${final.toFixed(2)} €</strong></div>
       `;
       // Save result for cart
@@ -3043,6 +3055,7 @@ ${itemsList}
           "Плат": platName,
           "Цвят": getColorDisplay(color),
           "Управление": controlLabel,
+          "Корди": cordsLabel,
           "Цена": `${final.toFixed(2)} €`
         }
       };
@@ -3079,8 +3092,12 @@ ${itemsList}
       if (!fabricKeyDn) { res.style.display = "block"; res.style.background = "#fadbd8"; res.style.color = "#c0392b"; res.innerHTML = "Невалиден плат."; return; }
       let k = dnFabricCoeff[fabricKeyDn];
       if (color === 'brown') k *= 1.05;
-      const final = base * k;
+      let final = base * k;
+      const dnCordsEl = document.querySelector('input[name="dn-cords"]:checked');
+      if (dnCordsEl && dnCordsEl.value === "yes") final += 3;
       const platName = fabric;
+      const controlLabel = control === "left" ? "Ляво" : "Дясно";
+      const cordsLabel = (dnCordsEl && dnCordsEl.value === "yes") ? "+корди (+3 €)" : "Без корди";
       res.style.display = "block";
       res.style.background = "#eafaf1";
       res.style.color = "#1e8449";
@@ -3088,11 +3105,11 @@ ${itemsList}
         <div>Размери: <span class="highlight">${width}×${height} см</span> → <strong>${w}×${h} см</strong></div>
         <div>Плат: <span class="highlight">${platName}</span> (×${k.toFixed(2)})</div>
         <div>Цвят: <span class="highlight">${getColorDisplay(color)}</span></div>
-        <div>Управление: <span class="highlight">${control === "left" ? "Ляво" : "Дясно"}</span></div>
+        <div>Управление: <span class="highlight">${controlLabel}</span></div>
+        <div>Корди: <span class="highlight">${cordsLabel}</span></div>
         <div style="margin-top:12px; font-size:1.4em;">Цена: <strong>${final.toFixed(2)} €</strong></div>
       `;
       // Save result for cart
-      const controlLabel = control === "left" ? "Ляво" : "Дясно";
       lastDnMiniResult = {
         name: "Ден и Нощ Мини",
         price: final,
@@ -3101,6 +3118,7 @@ ${itemsList}
           "Плат": platName,
           "Цвят": getColorDisplay(color),
           "Управление": controlLabel,
+          "Корди": cordsLabel,
           "Цена": `${final.toFixed(2)} €`
         }
       };
