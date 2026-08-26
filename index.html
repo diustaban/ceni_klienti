@@ -1381,6 +1381,7 @@
               <option value="kl">KL SERİSİ</option>
               <option value="st">ST SERİSİ</option>
               <option value="linda">LINDA SERİSİ</option>
+              <option value="tul_stor">TÜL STOR SERİSİ</option>
             </select>
             <input type="text" id="double-rolo-notes" class="calc-notes" placeholder="Бележки / Номер на плат (по избор)" style="width:100%;max-width:300px;">
             <select id="double-rolo-control" required style="width:100%;max-width:300px;">
@@ -2492,15 +2493,33 @@ ${itemsList}
     const dayNightExtras = roletniExtras;
     const doubleRoloExtras = roletniExtras;
         const doubleRoloSeries = {
-      yo_ser: { price: 17.00, label: "YO SER." },
-      rte_ser: { price: 16.00, label: "RTE SER." },
-      kl_ser: { price: 22.00, label: "KL SER." },
-      yt_ser: { price: 19.00, label: "YT SER." },
-      beauty_ser: { price: 22.00, label: "BEAUTY SER." },
-      li_nda_ser: { price: 24.00, label: "LİNDA SER." },
-      elite_ser: { price: 22.00, label: "ELITE SER." },
-      st_ser: { price: 22.00, label: "ST SER." }
+      yo: { price: 17.00, label: "YO SER." },
+      rte: { price: 16.00, label: "RTE SER." },
+      yt: { price: 19.00, label: "YT SER." },
+      beauty: { price: 22.00, label: "BEAUTY SER." },
+      elite: { price: 22.00, label: "ELITE SER." },
+      kl: { price: 22.00, label: "KL SER." },
+      st: { price: 22.00, label: "ST SER." },
+      linda: { price: 24.00, label: "LİNDA SER." },
+      tul_stor: { price: 22.00, label: "TÜL STOR SER." }
     };
+    function normDoubleRoloSeriesKey(val) {
+      if (!val) return val;
+      var k = String(val).trim();
+      var map = {
+        yo_ser: "yo",
+        rte_ser: "rte",
+        yt_ser: "yt",
+        beauty_ser: "beauty",
+        elite_ser: "elite",
+        kl_ser: "kl",
+        st_ser: "st",
+        li_nda_ser: "linda",
+        linda_ser: "linda",
+        tul_stor_ser: "tul_stor"
+      };
+      return map[k] || k;
+    }
         const pliseSeries = {
       DIAMOND: { price: 26.00, label: "DIAMOND" },
       BLACKOUT: { price: 46.00, label: "BLACKOUT" },
@@ -2594,7 +2613,7 @@ ${itemsList}
       elegans: getMaxDimensions(elegansPriceTable), // height: 230, width: 150
       roloPlus: getMaxDimensions(roloPlusPriceTable), // height: 230, width: 150
       dnnPlus: getMaxDimensions(dnnPlusPriceTable), // height: 230, width: 150
-      mosquito: { maxHeight: 230, maxWidth: 190 }, // Еднокрилен (17 височини, 15 ширини)
+      mosquito: { maxHeight: 250, maxWidth: 190 }, // Еднокрилен (19 височини, 15 ширини)
       mosquitoDouble: { maxHeight: 250, maxWidth: 260 }, // Двукрилен
       plise: { maxHeight: 350, maxWidth: 150 }, // Вече дефинирано
       roletni: { maxHeight: 300, maxWidth: 350 }, // Вече дефинирано
@@ -2639,13 +2658,16 @@ ${itemsList}
         "BRODE": 280
       },
       tulStor: {
+        "TÜL STOR YO": 280,
         "TÜL STOR RTE": 280,
         "TÜL STOR YT": 280,
         "TÜL STOR BEAUTY": 300,
         "TÜL STOR ELITE": 300,
         "TÜL STOR KL": 280,
         "TÜL STOR ST": 280,
+        "TÜL STOR LINDA": 280,
         "TÜL STOR YS": 280,
+        "TÜL STOR": 280,
         "TÜL STOR CL": 280,
         "TÜL STOR BO": 280
       },
@@ -2714,7 +2736,8 @@ ${itemsList}
         "elite": "TÜL STOR ELITE",
         "kl": "TÜL STOR KL",
         "st": "TÜL STOR ST",
-        "linda": "TÜL STOR YS" // Приблизително
+        "linda": "TÜL STOR LINDA",
+        "tul_stor": "TÜL STOR"
       },
       dayNight: {
         "eco": "ECO",
@@ -2742,9 +2765,10 @@ ${itemsList}
     // Функция за получаване на максималните размери на плата от Excel файла
     function getFabricMaxDimensions(type, seriesKey) {
       const mapping = fabricSeriesMapping[type];
-      if (!mapping || !mapping[seriesKey]) return null;
+      const lookupKey = type === "doubleRolo" ? normDoubleRoloSeriesKey(seriesKey) : seriesKey;
+      if (!mapping || !mapping[lookupKey]) return null;
       
-      const fabricName = mapping[seriesKey];
+      const fabricName = mapping[lookupKey];
       // Преобразуване на типа: roletni -> stor, doubleRolo -> tulStor, dayNight -> zebra
       let fabricType = type;
       if (type === "roletni") fabricType = "stor";
@@ -2847,7 +2871,9 @@ ${itemsList}
       ["71.00","72.00","74.00","75.00","77.00","78.00","80.00","81.00","83.00","84.00","86.00","87.00","89.00","90.00","92.00"],
       ["73.00","75.00","76.00","78.00","79.00","81.00","82.00","84.00","85.00","87.00","88.00","90.00","91.00","93.00","94.00"],
       ["75.00","77.00","79.00","80.00","82.00","83.00","85.00","86.00","88.00","89.00","91.00","92.00","94.00","95.00","97.00"],
-      ["78.00","79.00","81.00","82.00","84.00","85.00","87.00","88.00","90.00","92.00","93.00","95.00","96.00","98.00","99.00"]
+      ["78.00","79.00","81.00","82.00","84.00","85.00","87.00","88.00","90.00","92.00","93.00","95.00","96.00","98.00","99.00"],
+      ["80.00","82.00","83.00","85.00","86.00","88.00","89.00","91.00","92.00","94.00","95.00","97.00","98.00","100.00","101.00"],
+      ["83.00","84.00","86.00","87.00","89.00","90.00","92.00","93.00","95.00","96.00","98.00","99.00","101.00","102.00","104.00"]
     ];
         const doubleWhite = [
       ["84.00","86.00","88.00","90.00","92.00","95.00","97.00","99.00","102.00","103.00","107.00","109.00","112.00","114.00","117.00"],
@@ -2879,7 +2905,9 @@ ${itemsList}
       ["74.00","76.00","77.00","79.00","81.00","82.00","84.00","85.00","87.00","88.00","90.00","92.00","93.00","95.00","96.00"],
       ["77.00","78.00","80.00","81.00","83.00","85.00","86.00","88.00","89.00","91.00","93.00","94.00","96.00","97.00","99.00"],
       ["79.00","81.00","82.00","84.00","86.00","87.00","89.00","90.00","92.00","94.00","95.00","97.00","98.00","100.00","101.00"],
-      ["82.00","83.00","85.00","86.00","88.00","90.00","91.00","93.00","94.00","96.00","98.00","99.00","101.00","102.00","104.00"]
+      ["82.00","83.00","85.00","86.00","88.00","90.00","91.00","93.00","94.00","96.00","98.00","99.00","101.00","102.00","104.00"],
+      ["84.00","86.00","87.00","89.00","91.00","92.00","94.00","95.00","97.00","99.00","100.00","102.00","103.00","105.00","106.00"],
+      ["87.00","88.00","90.00","92.00","93.00","95.00","96.00","98.00","99.00","101.00","103.00","104.00","105.00","107.00","109.00"]
     ];
         const doubleColor = [
       ["88.00","90.00","92.00","95.00","97.00","99.00","102.00","104.00","107.00","109.00","112.00","115.00","117.00","120.00","123.00"],
@@ -2911,7 +2939,9 @@ ${itemsList}
       ["85.00","86.00","88.00","90.00","92.00","94.00","96.00","97.00","99.00","101.00","103.00","105.00","106.00","108.00","110.00"],
       ["88.00","89.00","91.00","93.00","95.00","97.00","98.00","100.00","102.00","104.00","106.00","108.00","109.00","111.00","113.00"],
       ["90.00","92.00","94.00","96.00","98.00","99.00","101.00","103.00","105.00","107.00","109.00","110.00","112.00","114.00","116.00"],
-      ["93.00","95.00","97.00","99.00","101.00","102.00","104.00","106.00","108.00","110.00","111.00","113.00","115.00","117.00","118.00"]
+      ["93.00","95.00","97.00","99.00","101.00","102.00","104.00","106.00","108.00","110.00","111.00","113.00","115.00","117.00","118.00"],
+      ["96.00","98.00","100.00","102.00","103.00","105.00","107.00","109.00","111.00","112.00","114.00","116.00","118.00","120.00","122.00"],
+      ["99.00","101.00","103.00","104.00","106.00","108.00","110.00","112.00","114.00","115.00","117.00","119.00","121.00","123.00","124.00"]
     ];
         const doubleFlander = [
       ["120.00","123.00","126.00","129.00","132.00","136.00","139.00","142.00","146.00","149.00","153.00","157.00","161.00","164.00","168.00"],
@@ -3720,7 +3750,7 @@ ${itemsList}
       const priceBackPerM2 = backSeries.price;
       
       // Изчисляване на цената на м² за прозрачен плат (от doubleRoloSeries)
-      const transparentSeries = doubleRoloSeries[transparentFabric];
+      const transparentSeries = doubleRoloSeries[normDoubleRoloSeriesKey(transparentFabric)];
       if (!transparentSeries) {
         showCalcError(res, "Невалиден прозрачен плат.");
         return;
@@ -4544,7 +4574,7 @@ ${itemsList}
     function getHeightIndex(height, type) {
       if (type === 'single') {
         if (height <= 70) return 0;
-        return Math.min(16, Math.floor((height - 71) / 10) + 1);
+        return Math.min(18, Math.floor((height - 71) / 10) + 1);
       }
       const minH = 141;
       if (height < minH) return 0;
@@ -5835,7 +5865,7 @@ ${itemsList}
     }
     function generateSingleWhiteTable() {
       const table = document.getElementById("single-white-table");
-      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230"];
+      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230","231-240","241-250"];
       const widths = ["0-50","51-60","61-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190"];
       let html = `<tr><th colspan="${widths.length+1}" style="background:#1A1A1A;color:white;">Еднокрилен – Бял профил</th></tr>`;
       html += `<tr><th>Височина \\ Ширина</th>${widths.map(w=>`<th>${w}</th>`).join('')}</tr>`;
@@ -5863,7 +5893,7 @@ ${itemsList}
     }
     function generateSingleColorTable() {
       const table = document.getElementById("single-color-table");
-      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230"];
+      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230","231-240","241-250"];
       const widths = ["0-50","51-60","61-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190"];
       let html = `<tr><th colspan="${widths.length+1}" style="background:#1A1A1A;color:white;">Еднокрилен – Цветни</th></tr>`;
       html += `<tr><th>Височина \\ Ширина</th>${widths.map(w=>`<th>${w}</th>`).join('')}</tr>`;
@@ -5891,7 +5921,7 @@ ${itemsList}
     }
     function generateSingleFlanderTable() {
       const table = document.getElementById("single-flander-table");
-      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230"];
+      const heights = ["0-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190","191-200","201-210","211-220","221-230","231-240","241-250"];
       const widths = ["0-50","51-60","61-70","71-80","81-90","91-100","101-110","111-120","121-130","131-140","141-150","151-160","161-170","171-180","181-190"];
       let html = `<tr><th colspan="${widths.length+1}" style="background:#1A1A1A;color:white;">Еднокрилен – Фладер</th></tr>`;
       html += `<tr><th>Височина \\ Ширина</th>${widths.map(w=>`<th>${w}</th>`).join('')}</tr>`;
